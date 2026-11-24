@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>三观自测：认清你自己</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{serif:['Noto Serif SC','Source Han Serif SC','serif']}}}}</script>
+  <style>
+    :root{color-scheme:dark}*{box-sizing:border-box}body{background:#0f172a;color:#f1f5f9;font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif}.glow{background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,.10),transparent 55%)}.screen{transition:opacity .35s ease,transform .35s ease}.screen.hidden-screen{display:none}.screen.entering{opacity:0;transform:translateY(8px)}.option-btn{transition:background .2s,border-color .2s,transform .15s}.option-btn:hover{transform:translateY(-2px)}.option-btn:active{transform:scale(.985)}#radar{width:100%;height:340px}@media(max-width:640px){#radar{height:300px}}
+  </style>
+</head>
+<body class="min-h-screen glow">
+  <main class="mx-auto flex min-h-screen w-full max-w-4xl items-center justify-center px-5 py-10">
+    <section id="welcome" class="screen w-full max-w-2xl text-center">
+      <div class="mb-8 text-xs tracking-[.4em] text-amber-400">A MOMENT OF REFLECTION</div>
+      <h1 class="font-serif text-4xl font-medium leading-tight text-slate-100 sm:text-6xl">三观自测<span class="text-amber-400">：</span><br class="sm:hidden">认清你自己</h1>
+      <p class="mt-6 text-lg text-slate-300">二十个选择，照见你理解世界的方式</p>
+      <p class="mx-auto mt-5 max-w-xl leading-8 text-slate-400">这不是一场标准答案的考试。请跟随直觉，选择最贴近此刻真实想法的选项，在关于意义、自由、时间与他人的问题中，描绘属于你的精神图景。</p>
+      <button id="startBtn" class="mt-10 rounded-full border border-amber-400/70 bg-amber-400 px-9 py-3.5 font-medium text-slate-950 transition hover:bg-amber-300">开始探索 <span aria-hidden="true">→</span></button>
+    </section>
+    <section id="quiz" class="screen hidden-screen w-full max-w-2xl" aria-live="polite">
+      <div class="mb-12">
+        <div class="mb-3 flex items-center justify-between text-sm"><span class="tracking-widest text-amber-400">自我探索</span><span id="progressText" class="text-slate-400">1 / 20</span></div>
+        <div class="h-1.5 overflow-hidden rounded-full bg-slate-700"><div id="progressBar" class="h-full rounded-full bg-amber-400 transition-all duration-500" style="width:5%"></div></div>
+      </div>
+      <div class="mb-8 text-xs tracking-[.25em] text-slate-500" id="questionIndex">QUESTION 01</div>
+      <h2 id="questionText" class="font-serif text-2xl leading-relaxed text-slate-100 sm:text-3xl"></h2>
+      <div id="options" class="mt-9 grid gap-3"></div>
+      <p class="mt-8 text-center text-xs text-slate-500">选择最接近你真实想法的一项</p>
+    </section>
+    <section id="loading" class="screen hidden-screen w-full max-w-2xl text-center">
+      <div class="mx-auto mb-7 h-10 w-10 animate-spin rounded-full border-2 border-slate-700 border-t-amber-400"></div>
+      <p class="font-serif text-xl tracking-wide text-amber-300">正在构建你的精神图景...</p>
+    </section>
+    <section id="result" class="screen hidden-screen w-full max-w-4xl">
+      <header class="mb-8 text-center"><div class="text-xs tracking-[.35em] text-amber-400">YOUR INNER LANDSCAPE</div><h2 class="mt-3 font-serif text-3xl text-slate-100 sm:text-4xl">你的精神图景</h2><p class="mt-2 text-sm text-slate-400">二十次选择，拼成此刻的你</p></header>
+      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-7 text-center shadow-xl sm:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属头衔</div><h3 id="titleText" class="mt-4 font-serif text-3xl font-semibold leading-relaxed text-amber-200 sm:text-4xl"></h3><p id="titleSubtext" class="mt-3 text-sm text-slate-400"></p></article>
+      <article class="mb-6 rounded-2xl border border-slate-700/70 bg-slate-800/40 p-4 sm:p-6"><div class="mb-1 text-center"><h3 class="font-serif text-xl text-slate-100">你的三观能量图</h3><p class="mt-1 text-xs text-slate-500">得分越高，代表本次回答中该维度出现得越频繁</p></div><div id="radar" role="img" aria-label="前六名价值观维度雷达图"></div></article>
+      <section class="mb-6"><div class="mb-4 flex items-end justify-between"><div><div class="text-xs tracking-[.25em] text-amber-400">DEEP READING</div><h3 class="mt-2 font-serif text-2xl text-slate-100">多维深度解析</h3></div><span class="text-xs text-slate-500">前四维度</span></div><div id="summary" class="grid gap-4 sm:grid-cols-2"></div></section>
+      <section class="mb-6 grid gap-4 md:grid-cols-2"><article class="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">◈</span><div><div class="text-xs tracking-widest text-slate-500">RELATIONSHIPS</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的社交风格</h3></div></div><p id="socialAdvice" class="text-sm leading-7 text-slate-300"></p></article><article class="rounded-2xl border border-amber-400/20 bg-amber-400/[.05] p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">✦</span><div><div class="text-xs tracking-widest text-slate-500">A NOTE TO YOU</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的生活建议</h3></div></div><p id="lifeAdvice" class="text-sm leading-7 text-slate-300"></p></article></section>
+      <button id="restartBtn" class="mx-auto mt-8 block rounded-full border border-amber-400/70 px-8 py-3 text-amber-300 transition hover:bg-amber-400 hover:text-slate-950">重新测试</button>
+      <p class="mt-5 text-center text-xs text-slate-600">结果仅供自我观察与交流，不构成固定的人格定义。</p>
+    </section>
+  </main>
+<script>const questions = [
+  { q: "如果明天就是世界末日，你今晚会怎么度过？", options: [
+    { text: "享受最后一顿大餐，开心最重要", score: { "享乐": 1, "当下": 1 } },
+    { text: "把最想说的话告诉家人朋友", score: { "利他": 1, "人性善": 1 } },
+    { text: "照常睡觉，反正一切都将终结", score: { "虚无": 1, "佛系": 1 } },
+    { text: "写下自己的一生，证明我来过", score: { "自我实现": 1, "存在": 1 } }
+  ]},
+  { q: "如果你参与的一个大项目在最后关头失败了，你的第一反应是？", options: [
+    { text: "总结经验，下次一定行", score: { "积极": 1, "经验": 1 } },
+    { text: "结果不重要，至少我自由选择并参与过", score: { "存在": 1, "自由": 1 } },
+    { text: "命里有时终须有，别强求", score: { "顺应": 1, "佛系": 1 } },
+    { text: "反正一切都没有意义，无所谓", score: { "虚无": 1, "人性恶": 1 } }
+  ]},
+  { q: "面对社交媒体上泛滥的新闻和信息，你倾向于？", options: [
+    { text: "多方查证，用逻辑判断真伪", score: { "理性": 1, "积极": 1 } },
+    { text: "只相信自己的亲身经历和感受", score: { "经验": 1, "当下": 1 } },
+    { text: "不关心，觉得那是群体狂欢，我更关注自身", score: { "个人": 1, "佛系": 1 } },
+    { text: "为了维护我的群体或国家立场，我会发声", score: { "集体": 1, "积极": 1 } }
+  ]},
+  { q: "你在职场中最看重的是？", options: [
+    { text: "薪资待遇和物质回报", score: { "物质": 1, "享乐": 1 } },
+    { text: "是否能发挥我的潜能，做出成绩", score: { "自我实现": 1, "积极": 1 } },
+    { text: "能不能帮到别人，或者社会价值大不大", score: { "利他": 1, "精神": 1 } },
+    { text: "工作环境稳定，别折腾就行", score: { "保守": 1, "顺应": 1 } }
+  ]},
+  { q: "关于“时间”，你的真实感受是？", options: [
+    { text: "时间像一条单向的线，过去就回不去了，要抓紧向前", score: { "线性时间": 1, "积极": 1 } },
+    { text: "历史总在重演，人生也是周期性的", score: { "佛系": 1, "顺应": 1 } },
+    { text: "未来会越来越好，社会在进步", score: { "积极": 1, "精神": 1 } },
+    { text: "活在当下，今天快乐最重要", score: { "当下": 1, "享乐": 1 } }
+  ]},
+  { q: "当你在人际交往中遇到冲突时，你通常怎么解决？", options: [
+    { text: "换位思考，相信对方本性是好的", score: { "人性善": 1, "利他": 1 } },
+    { text: "直接利用规则或利益交换来解决问题", score: { "理性": 1, "物质": 1 } },
+    { text: "怀疑对方别有用心，先保护自己", score: { "人性恶": 1, "个人": 1 } },
+    { text: "冷处理，交给时间自然解决", score: { "佛系": 1, "顺应": 1 } }
+  ]},
+  { q: "如果给你一笔巨款，你会怎么花？", options: [
+    { text: "买买买，体验各种没做过的事", score: { "享乐": 1, "当下": 1, "物质": 1 } },
+    { text: "投资自己，学习深造，或者创业", score: { "自我实现": 1, "积极": 1 } },
+    { text: "捐给慈善机构，或者帮亲友渡过难关", score: { "利他": 1, "精神": 1 } },
+    { text: "存银行吃利息，然后继续过平淡日子", score: { "保守": 1, "顺应": 1 } }
+  ]},
+  { q: "对于“规则”和“自由”，你倾向于？", options: [
+    { text: "规则是为了保障所有人的利益，必须遵守", score: { "集体": 1, "理性": 1 } },
+    { text: "规则是死的，人是活的，不该被束缚", score: { "自由": 1, "个人": 1 } },
+    { text: "规则是强者制定的，我只关注自己的利益最大化", score: { "物质": 1, "经验": 1 } },
+    { text: "既然规则改变不了，我就在规则内找点乐子", score: { "佛系": 1, "当下": 1 } }
+  ]},
+  { q: "如果发现你深信不疑的观念被证明是错的，你会？", options: [
+    { text: "承认错误，用科学和逻辑重新审视", score: { "理性": 1, "经验": 1 } },
+    { text: "觉得这只是个例，我的信念依然有它的价值", score: { "精神": 1, "保守": 1 } },
+    { text: "无所谓对错，只要这个观念当时让我开心就行", score: { "享乐": 1, "虚无": 1 } },
+    { text: "感觉世界崩塌，陷入虚无", score: { "虚无": 1, "人性恶": 1 } }
+  ]},
+  { q: "你认为人类历史的走向是？", options: [
+    { text: "不断向前进步的，未来一定优于过去", score: { "线性时间": 1, "积极": 1 } },
+    { text: "循环往复的，打天下坐天下又散天下", score: { "佛系": 1, "顺应": 1 } },
+    { text: "充满随机和突变的，不可预测", score: { "虚无": 1, "经验": 1 } },
+    { text: "是无数个人自由选择叠加的结果", score: { "个人": 1, "自由": 1, "存在": 1 } }
+  ]},
+  { q: "你更同意哪种关于“人生目标”的说法？", options: [
+    { text: "人生没有既定意义，意义是我自己赋予的", score: { "存在": 1, "自由": 1 } },
+    { text: "达到某个成就，获得名望和影响力", score: { "自我实现": 1, "积极": 1 } },
+    { text: "帮助他人，让世界因为我好一点点", score: { "利他": 1, "精神": 1 } },
+    { text: "人生没有固定目标，顺其自然", score: { "佛系": 1, "顺应": 1 } }
+  ]},
+  { q: "对于财富和物质，你的真实态度是？", options: [
+    { text: "钱是工具，能让我实现各种体验", score: { "物质": 1, "享乐": 1 } },
+    { text: "钱不重要，内心的平静和精神追求更重要", score: { "精神": 1, "利他": 1 } },
+    { text: "必须存钱，财富是安全感的唯一来源", score: { "保守": 1, "物质": 1 } },
+    { text: "够花就行，不为钱过度拼命", score: { "佛系": 1, "当下": 1 } }
+  ]},
+  { q: "当你感到迷茫时，你通常靠什么走出来？", options: [
+    { text: "做计划、分析利弊，依靠理性来破局", score: { "理性": 1, "积极": 1 } },
+    { text: "先去体验新事物，在经历中寻找灵感", score: { "经验": 1, "当下": 1 } },
+    { text: "向朋友、家人倾诉，或者寻求神佛/信仰的慰藉", score: { "利他": 1, "精神": 1 } },
+    { text: "躺平，迷茫就迷茫吧，过几天就好了", score: { "佛系": 1, "顺应": 1 } }
+  ]},
+  { q: "面对不公义的社会现象，你的第一反应是？", options: [
+    { text: "必须发声、行动，推动改变", score: { "积极": 1, "集体": 1, "自由": 1 } },
+    { text: "保护好自己的权益，其他管不了", score: { "个人": 1, "理性": 1 } },
+    { text: "这个世界就是这样的，看淡点", score: { "佛系": 1, "虚无": 1 } },
+    { text: "坚信人性本恶，社会就是这样运作的", score: { "人性恶": 1, "顺应": 1 } }
+  ]},
+  { q: "在爱情或友情中，你最渴望得到的是？", options: [
+    { text: "深度的灵魂共鸣和精神契合", score: { "精神": 1, "利他": 1 } },
+    { text: "彼此陪伴，共同体验生活的乐趣", score: { "享乐": 1, "当下": 1 } },
+    { text: "彼此提供实用价值，互相帮助", score: { "物质": 1, "理性": 1 } },
+    { text: "自由，不想因为关系失去个人空间", score: { "个人": 1, "自由": 1 } }
+  ]},
+  { q: "如果你可以做一件改变世界的事，你会选？", options: [
+    { text: "消除贫穷和疾病，让所有人过上好日子", score: { "利他": 1, "集体": 1 } },
+    { text: "建立一个绝对理性的制度，消除人类纷争", score: { "理性": 1, "保守": 1 } },
+    { text: "让每个人都能毫无约束地做自己", score: { "自由": 1, "个人": 1 } },
+    { text: "让所有人都能享受当下的快乐", score: { "享乐": 1, "当下": 1 } }
+  ]},
+  { q: "当你是团队中最聪明的人，但没人听你的，你会？", options: [
+    { text: "想办法证明自己是对的，努力说服他们", score: { "积极": 1, "自我实现": 1 } },
+    { text: "做好自己的分内事，不给团队添麻烦", score: { "顺应": 1, "佛系": 1 } },
+    { text: "觉得他们很蠢，但懒得去争辩", score: { "虚无": 1, "个人": 1 } },
+    { text: "想办法搞定关键人物，利用规则实现我的目标", score: { "理性": 1, "经验": 1 } }
+  ]},
+  { q: "关于“死亡”，你的看法是？", options: [
+    { text: "是必然的终点，正因为会死，现在才要好好活", score: { "存在": 1, "积极": 1 } },
+    { text: "轮回的一部分，或者灵魂会去另一个世界", score: { "精神": 1, "顺应": 1 } },
+    { text: "死了就什么都没了，所以更要在生前享受", score: { "享乐": 1, "虚无": 1 } },
+    { text: "不敢想，尽力避免谈论这个话题", score: { "保守": 1, "人性恶": 1 } }
+  ]},
+  { q: "你认为一个人的性格主要由什么决定？", options: [
+    { text: "基因和原生家庭，先天成分居多", score: { "经验": 1, "保守": 1 } },
+    { text: "后天的教育和自己的经历", score: { "经验": 1, "积极": 1 } },
+    { text: "个人的自由选择，你想成为什么样的人就能成为什么样", score: { "自由": 1, "存在": 1 } },
+    { text: "环境逼出来的，人在江湖身不由己", score: { "顺应": 1, "人性恶": 1 } }
+  ]},
+  { q: "如果给你一次彻底脱离社会、去深山老林独居的机会，你会？", options: [
+    { text: "毫不犹豫地答应，远离人群是最高级的享受", score: { "个人": 1, "佛系": 1 } },
+    { text: "拒绝，我的人生价值必须通过社会和他人来实现", score: { "集体": 1, "利他": 1 } },
+    { text: "偶尔去体验一下可以，长期还是要在俗世中找乐子", score: { "享乐": 1, "当下": 1 } },
+    { text: "带上书和工具，去完成我一直想做的创作或研究", score: { "自我实现": 1, "精神": 1 } }
+  ]}
+];
+
+const dimensionDesc = {
+  "享乐": "你信奉享乐主义，认为快乐是人生的最高追求。",
+  "自我实现": "你追求自我实现，致力于充分发挥自身的潜能与价值。",
+  "利他": "你信仰利他主义，认为帮助他人是人生的核心意义。",
+  "佛系": "你倾向于顺其自然，不强求，用松弛感化解生活焦虑。",
+  "积极": "你是个积极主义者，相信人生充满意义，勇于应对挑战。",
+  "虚无": "你带有些许虚无主义色彩，认为人生本质上没有终极目的。",
+  "存在": "你具备存在主义精神，主张个体自由选择并为自己赋予意义。",
+  "顺应": "你信奉顺应主义，认为应顺从命运或环境的安排，不盲目强求。",
+  "线性时间": "你是线性时间观者，认为时间是单向流动的，应抓紧向前。",
+  "当下": "你强调活在当下，认为把握当前时刻才是最重要的事情。",
+  "个人": "你偏向个人主义，强调个人自由、权利和自主性。",
+  "集体": "你偏向集体主义，最看重群体利益、责任与集体荣誉感。",
+  "物质": "你注重物质优先，追求财富、实用和效率等现实成果。",
+  "精神": "你注重精神优先，强调内在满足、信仰和灵魂的丰盈。",
+  "保守": "你带有保守主义倾向，重视传统与秩序，反感激进的改变。",
+  "自由": "你是自由主义者，主张个人自由与权利优先，强调开放。",
+  "理性": "你倾向于理性主义，依赖逻辑推理和普遍原则来认识世界。",
+  "经验": "你倾向于经验主义，更相信通过感官经验和观察来获取真知。",
+  "人性善": "你相信人性本善，认为人在本质上倾向善良和合作。",
+  "人性恶": "你相信人性本恶，认为人天生自私或倾向于作恶。"
+};
+const dimensions = Object.keys(dimensionDesc);
+let userScores = Object.fromEntries(dimensions.map(name => [name, 0]));
+let questionIndex = 0;
+let chart = null;
+const screens = [...document.querySelectorAll('.screen')];
+function showScreen(id){screens.forEach(el=>{el.classList.add('hidden-screen');el.classList.remove('entering')});const target=document.getElementById(id);target.classList.remove('hidden-screen');target.classList.add('entering');requestAnimationFrame(()=>target.classList.remove('entering'));window.scrollTo({top:0,behavior:'smooth'})}
+function renderQuestion(){const item=questions[questionIndex];document.getElementById('progressText').textContent=`${questionIndex+1} / ${questions.length}`;document.getElementById('progressBar').style.width=`${((questionIndex+1)/questions.length)*100}%`;document.getElementById('questionIndex').textContent=`QUESTION ${String(questionIndex+1).padStart(2,'0')}`;document.getElementById('questionText').textContent=item.q;const container=document.getElementById('options');container.replaceChildren();item.options.forEach((option,index)=>{const button=document.createElement('button');button.type='button';button.className='option-btn w-full rounded-xl border border-slate-700 bg-slate-800/60 px-5 py-4 text-left leading-7 text-slate-200 hover:border-amber-400/70 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400/60';const marker=document.createElement('span');marker.className='mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-600 text-xs text-amber-400';marker.textContent=String.fromCharCode(65+index);button.append(marker,document.createTextNode(option.text));button.addEventListener('click',()=>chooseOption(option));container.append(button)})}
+function chooseOption(option){Object.entries(option.score).forEach(([dimension,points])=>{if(Object.hasOwn(userScores,dimension))userScores[dimension]+=points});questionIndex++;if(questionIndex<questions.length){renderQuestion()}else{showScreen('loading');window.setTimeout(showResults,850)}}
+const deepDesc = {
+  "享乐":"你珍惜具体而真实的快乐，懂得把生活过成值得回味的体验。别让即时满足替你做完所有长期选择。",
+  "自我实现":"你不甘于只把日子过完，更想把潜能兑现成作品与影响。记得让目标服务于你，而不是让你困在永远不够好的追赶里。",
+  "利他":"你常把别人的需要放进自己的考虑里，温柔是你的力量。帮助之前也留意自己的边界，善意不必以透支为代价。",
+  "佛系":"你擅长从失控中抽身，不让每件事都消耗自己。松弛能保护内心，也别让它悄悄替你放弃真正想争取的东西。",
+  "积极":"你愿意相信行动能带来变化，也能在挫折后重新出发。热情之外给自己留一点休息，慢下来并不等于停滞。",
+  "虚无":"你看透了宏大叙事，用冷眼旁观保护自己。不是没有热血，只是拒绝被绑架。偶尔也可以为具体的人和事重新投入。",
+  "存在":"你不等待别人替人生定价，而愿意用选择创造意义。自由也意味着承担选择的后果，允许自己边走边修正。",
+  "顺应":"你能读懂环境的边界，懂得何时顺势而行。适应不是失去主见，在重要的事情上仍可以为自己留一道选择。",
+  "线性时间":"你对时间流逝保持敏锐，倾向把目光投向下一站。珍惜进度的同时，也别把此刻活成通往未来的候车室。",
+  "当下":"你善于感受眼前的生活，不轻易错过日常里的满足。让当下成为根基，也为未来留一点准备和余地。",
+  "个人":"你重视自主与边界，习惯先确认自己真正想要什么。独立让你清醒，也可以试着让可信的人靠近一点。",
+  "集体":"你从共同目标和彼此承担中获得力量。照顾群体时也记得表达自己的需要，归属不该以抹去自我为代价。",
+  "物质":"你看重可触摸的成果，愿意用现实条件换取安全和选择。物质是生活的支撑，记得也为关系、兴趣和休息留预算。",
+  "精神":"你在意内心的完整与价值感，不容易被表面得失满足。让理想落进日常的小行动，精神追求才会真正托住生活。",
+  "保守":"你珍视稳定、经验与可预期的秩序，这让你少受冲动裹挟。遇到新变化时，可以先小步试验，不必一次押上全部安全感。",
+  "自由":"你珍惜不被安排的人生，愿意为自主空间据理力争。自由也需要彼此尊重的边界，承诺不一定会夺走选择。",
+  "理性":"你习惯拆解问题、检验证据，再决定相信什么。逻辑能帮你看清事实，也给情绪一点被听见的空间。",
+  "经验":"你相信亲历和观察带来的判断，不轻易被空泛理论说服。经验是可靠的起点，遇到陌生情境时也给新证据一次机会。",
+  "人性善":"你愿意先看见他人的善意与合作可能，这让关系有了温度。保持信任的同时辨认行动和边界，善良无需放弃自我保护。",
+  "人性恶":"你对利益与风险保持警觉，不轻易把信任交出去。这份清醒能保护你，也别让防备替所有关系预设结局。"
+};
+function getTitle(first, second) {
+  const pair = `${first}|${second}`;
+  const reversePair = `${second}|${first}`;
+  const titles = {
+    '个人|自由':'自由的独行侠','存在|享乐':'通透的享乐主义哲学家','享乐|当下':'及时行乐的生活家','利他|人性善':'温暖坚定的理想主义者',
+    '佛系|顺应':'从容的顺势观察者','积极|自我实现':'不断进化的行动派','虚无|人性恶':'清醒的荒诞观察者','理性|经验':'审慎的现实求真者',
+    '利他|集体':'心怀众人的同行者','个人|理性':'独立清醒的思考者','自由|存在':'自主的意义创造者','精神|利他':'温柔的精神实践者',
+    '当下|享乐':'认真生活的体验派','保守|顺应':'稳健的生活守望者','物质|享乐':'务实的生活享受家','精神|存在':'寻找意义的灵魂旅人'
+  };
+  return titles[pair] || titles[reversePair] || `以「${first}」为底色的${second}探索者`;
+}
+function getSocialAdvice() {
+  const personal = userScores['个人'], collective = userScores['集体'];
+  const kind = userScores['人性善'], guarded = userScores['人性恶'];
+  let connection = personal > collective ? '你更需要自主空间，适合在亲密关系里提前说清边界与独处需求。' : collective > personal ? '你容易从共同目标和互相照应中建立连接，记得也把自己的需要说出来。' : '你能在个人空间与群体归属之间寻找平衡，按关系和情境调整距离会更自在。';
+  let trust = kind > guarded ? '你倾向先给出信任，保持善意的同时观察对方是否用行动回应。' : guarded > kind ? '你会先确认安全和可靠性，试着从小承诺开始建立信任，不必一次交付全部。' : '你既看见善意也留意风险，给关系一点观察时间，再决定投入多少。';
+  return `${connection}${trust}`;
+}
+function getLifeAdvice(topFour) {
+  const advice = {
+    '享乐':'把快乐留给日常，也给长期目标留出位置。','自我实现':'持续精进很好，别把自我价值只交给成绩证明。','利他':'照亮别人之前，也要让自己的生活有余粮。','佛系':'放下不由你控制的事，也别放下仍能改变的事。','积极':'行动值得肯定，恢复精力同样是前进的一部分。','虚无':'不必相信宏大答案，先认真对待眼前的小事。','存在':'你可以不断选择，也可以允许自己改主意。','顺应':'顺势而行是能力，适时转向也是能力。','线性时间':'向前赶路时，别忘了确认这条路仍是你想走的。','当下':'好好生活在今天，也为明天留一盏灯。','个人':'守住边界，也给重要的人留一扇沟通的门。','集体':'承担共同责任时，别把自己的声音落下。','物质':'稳固生活基础，也为无法标价的满足留出空间。','精神':'让理想落地成小行动，内心会更有依托。','保守':'守住可靠的根，也给新可能一小块试验田。','自由':'珍惜选择权，也为选择带来的责任做好准备。','理性':'让证据帮助判断，也让情绪提供重要线索。','经验':'相信经历，也持续更新你理解世界的方式。','人性善':'带着善意前行，同时保留清醒的边界。','人性恶':'谨慎能保护你，信任也可以从小处慢慢验证。'
+  };
+  return `你的选择呈现出${topFour.slice(0,3).map(([name])=>`「${name}」`).join('、')}的底色。${advice[topFour[0][0]]}把优势用在真实生活里，也给自己保留调整方向的余地。`;
+}
+function showResults(){
+  const ranking=Object.entries(userScores).sort((a,b)=>b[1]-a[1]||dimensions.indexOf(a[0])-dimensions.indexOf(b[0]));
+  const topFour=ranking.slice(0,4),topSix=ranking.slice(0,6);
+  const dimensionMaxScores=Object.fromEntries(dimensions.map(name=>[name,questions.filter(item=>item.options.some(option=>Object.hasOwn(option.score,name))).length]));
+  document.getElementById('titleText').textContent=`【${getTitle(topFour[0][0],topFour[1][0])}】`;
+  document.getElementById('titleSubtext').textContent=`核心倾向：${topFour[0][0]} · ${topFour[1][0]}`;
+  const summary=document.getElementById('summary');
+  summary.replaceChildren(...topFour.map(([name,score],index)=>{
+    const card=document.createElement('article');card.className='rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6';
+    const top=document.createElement('div');top.className='mb-4 flex items-center justify-between';
+    const label=document.createElement('div');label.innerHTML=`<span class="mr-2 text-xs tracking-widest text-amber-400">0${index+1}</span><span class="text-lg font-medium text-slate-100">${name}</span>`;
+    const scoreLabel=document.createElement('span');scoreLabel.className='text-sm text-amber-300';scoreLabel.textContent=`${score} 分`;
+    top.append(label,scoreLabel);
+    const desc=document.createElement('p');desc.className='min-h-[5rem] text-sm leading-7 text-slate-300';desc.textContent=deepDesc[name];
+    const track=document.createElement('div');track.className='mt-5 h-2 overflow-hidden rounded-full bg-slate-700';
+    const fill=document.createElement('div');fill.className='h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-300 transition-all duration-700';fill.style.width=`${Math.min(100,score/Math.max(1,dimensionMaxScores[name])*100)}%`;track.append(fill);
+    const scale=document.createElement('div');scale.className='mt-2 flex justify-between text-xs text-slate-500';scale.innerHTML=`<span>本次得分占比</span><span>${score} / ${dimensionMaxScores[name]}</span>`;
+    card.append(top,desc,track,scale);return card;
+  }));
+  document.getElementById('socialAdvice').textContent=getSocialAdvice();
+  document.getElementById('lifeAdvice').textContent=getLifeAdvice(topFour);
+  showScreen('result');
+  requestAnimationFrame(()=>{
+    if(!chart)chart=echarts.init(document.getElementById('radar'));
+    chart.setOption({animationDuration:700,tooltip:{trigger:'item',formatter:params=>`${params.name}<br>${params.value.map((value,index)=>`${topSix[index][0]}：${value}分`).join('<br>')}`},radar:{center:['50%','53%'],radius:'66%',indicator:topSix.map(([name])=>({name,max:Math.max(1,dimensionMaxScores[name])})),axisName:{color:'#e2e8f0',fontSize:12},axisLine:{lineStyle:{color:'rgba(148,163,184,.35)'}},splitLine:{lineStyle:{color:'rgba(148,163,184,.2)'}},splitArea:{areaStyle:{color:['rgba(30,41,59,.18)','rgba(51,65,85,.22)']}}},series:[{type:'radar',data:[{value:topSix.map(([,score])=>score),name:'你的倾向',symbol:'circle',symbolSize:6,lineStyle:{color:'#fbbf24',width:2},itemStyle:{color:'#fbbf24'},areaStyle:{color:'rgba(251,191,36,.22)'}}]}]});chart.resize();
+  });
+}
+function restart(){userScores=Object.fromEntries(dimensions.map(name=>[name,0]));questionIndex=0;if(chart){chart.dispose();chart=null}showScreen('welcome')}
+document.getElementById('startBtn').addEventListener('click',()=>{questionIndex=0;userScores=Object.fromEntries(dimensions.map(name=>[name,0]));renderQuestion();showScreen('quiz')});document.getElementById('restartBtn').addEventListener('click',restart);window.addEventListener('resize',()=>chart?.resize());
+</script>
+</body>
+</html>
+
+
+
