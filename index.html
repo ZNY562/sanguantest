@@ -196,7 +196,7 @@
 
       #titleText {
         margin-top: .75rem;
-        font-size: clamp(1.5rem, 6.5vw, 2rem);
+        font-size: clamp(1.875rem, 7vw, 2.5rem);
         line-height: 1.5;
         overflow-wrap: anywhere;
       }
@@ -297,7 +297,7 @@
     </section>
     <section id="result" class="screen hidden-screen w-full max-w-4xl">
       <header class="mb-8 text-center"><div class="text-xs tracking-[.35em] text-amber-400">YOUR INNER LANDSCAPE</div><h2 class="mt-3 font-serif text-2xl text-slate-100 sm:text-3xl md:text-4xl">你的精神图景</h2><p class="mt-2 text-sm text-slate-400">二十次选择，拼成此刻的你</p></header>
-      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-5 text-center shadow-xl sm:p-8 md:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属标签 · YOUR SIGNATURE</div><h3 id="titleText" class="mt-4 font-serif text-2xl font-semibold leading-relaxed text-amber-200 sm:text-3xl md:text-4xl"></h3><p id="titleQuote" class="mx-auto mt-3 max-w-2xl text-sm italic leading-7 text-slate-300"></p><p id="titleSubtext" class="mt-3 text-xs tracking-wide text-slate-500"></p></article>
+      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-5 text-center shadow-xl sm:p-8 md:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属标签 · YOUR SIGNATURE</div><h3 id="titleText" class="mt-4 font-serif text-3xl font-semibold leading-relaxed text-amber-400 sm:text-4xl md:text-5xl"></h3><p id="titleQuote" class="mx-auto mt-4 max-w-2xl text-sm italic leading-7 text-slate-300 sm:text-base sm:leading-8"></p><p id="titleSubtext" class="mt-3 text-xs tracking-wide text-slate-500"></p></article>
       <article class="mb-6 rounded-2xl border border-slate-700/70 bg-slate-800/40 p-4 sm:p-6"><div class="mb-1 text-center"><h3 class="font-serif text-xl text-slate-100">你的三观能量图</h3><p class="mt-1 text-xs text-slate-500">得分越高，代表本次回答中该维度出现得越频繁</p></div><div id="radar" role="img" aria-label="前六名价值观维度雷达图"></div></article>
       <section class="mb-6"><div class="mb-4 flex items-end justify-between"><div><div class="text-xs tracking-[.25em] text-amber-400">DEEP READING</div><h3 class="mt-2 font-serif text-2xl text-slate-100">多维深度解析</h3></div><span class="text-xs text-slate-500">前四维度</span></div><div id="summary" class="grid gap-4 sm:grid-cols-2"></div></section>
       <section class="mb-6 grid gap-4 md:grid-cols-2"><article class="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">◈</span><div><div class="text-xs tracking-widest text-slate-500">RELATIONSHIPS</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的社交风格</h3></div></div><p id="socialAdvice" class="text-sm leading-7 text-slate-300"></p></article><article class="rounded-2xl border border-amber-400/20 bg-amber-400/[.05] p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">✦</span><div><div class="text-xs tracking-widest text-slate-500">A NOTE TO YOU</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的生活建议</h3></div></div><p id="lifeAdvice" class="text-sm leading-7 text-slate-300"></p></article></section>
@@ -481,35 +481,23 @@ const deepDesc = {
   "人性善":"你愿意先看见他人的善意与合作可能，这让关系有了温度。保持信任的同时辨认行动和边界，善良无需放弃自我保护。",
   "人性恶":"你对利益与风险保持警觉，不轻易把信任交出去。这份清醒能保护你，也别让防备替所有关系预设结局。"
 };
-function getTitle(first, second) {
-  const pair = `${first}|${second}`;
-  const reversePair = `${second}|${first}`;
-  const titles = {
-    '个人|自由':'自由的独行侠','存在|享乐':'通透的享乐主义哲学家','享乐|当下':'及时行乐的生活家','利他|人性善':'温暖坚定的理想主义者',
-    '佛系|顺应':'从容的顺势观察者','积极|自我实现':'不断进化的行动派','虚无|人性恶':'清醒的荒诞观察者','理性|经验':'审慎的现实求真者',
-    '利他|集体':'心怀众人的同行者','个人|理性':'独立清醒的思考者','自由|存在':'自主的意义创造者','精神|利他':'温柔的精神实践者',
-    '当下|享乐':'认真生活的体验派','保守|顺应':'稳健的生活守望者','物质|享乐':'务实的生活享受家','精神|存在':'寻找意义的灵魂旅人'
-  };
-  return titles[pair] || titles[reversePair] || `以「${first}」为底色的${second}探索者`;
-}
-const signatureByPair = {
-  '虚无|佛系': { title: '赛博游侠', quote: '看透了世界的荒诞，决定用躺平来热爱生活。' },
-  '自我实现|理性': { title: '冷酷实干家', quote: '摒弃情绪的内耗，用逻辑和结果丈量世界。' },
-  '享乐|存在': { title: '存在主义玩家', quote: '既然人生本无意义，不如把今天过得尽兴。' },
-  '利他|精神': { title: '人间治愈师', quote: '你的温柔有力量，在照亮别人的同时也温暖了自己。' },
-  '积极|自我实现': { title: '破晓行动派', quote: '把相信未来当作燃料，再用今天的行动让它发生。' },
-  '个人|自由': { title: '边界自由人', quote: '忠于内心的方向，也尊重他人选择生活的权利。' },
-  '理性|经验': { title: '现实求真者', quote: '不迷信空谈，让证据和亲历替你给世界下判断。' },
-  '集体|利他': { title: '理想同行者', quote: '把善意落到协作里，让每一次付出都能改变现实。' },
-  '当下|享乐': { title: '此刻收藏家', quote: '不把快乐寄存在未来，认真收集眼前真实的欢喜。' },
-  '保守|物质': { title: '稳健筑梦人', quote: '先把生活的地基打牢，再从容追逐想要的风景。' }
+const titleMap = {
+  "虚无+佛系": { title: "赛博游侠", quote: "看透了世界的荒诞，决定用躺平来热爱生活。" },
+  "虚无+个人": { title: "孤岛观察者", quote: "既看见善意也留意风险，给关系一点观察时间。" },
+  "佛系+个人": { title: "精神独行客", quote: "放下不由你控制的事，也别放下仍能改变的事。" },
+  "自我实现+理性": { title: "冷酷实干家", quote: "摒弃情绪的内耗，用逻辑和结果丈量世界。" },
+  "自我实现+自由": { title: "旷野拓荒者", quote: "规则是死的，人是活的，你的边界由你自己定义。" },
+  "享乐+存在": { title: "存在主义玩家", quote: "既然人生本无意义，不如把今天过得尽兴。" },
+  "享乐+当下": { title: "体验派大玩家", quote: "昨天是历史，明天是谜团，只有今天是礼物。" },
+  "利他+精神": { title: "人间治愈师", quote: "你的温柔有力量，在照亮别人的同时也温暖了自己。" },
+  "集体+积极": { title: "秩序守护者", quote: "你相信微光汇聚成炬，愿意为更好的世界发声。" },
+  "顺应+经验": { title: "现实主义智者", quote: "不强求逆流而上，懂得借力打力才是生存哲学。" },
+  "default": { title: "三观漫游者", quote: "你是一个复杂的矛盾体，在混沌中寻找属于自己的自洽。" }
 };
-function getPersonalSignature(first, second) {
-  const signature = signatureByPair[`${first}|${second}`] || signatureByPair[`${second}|${first}`];
-  return signature || {
-    title: getTitle(first, second),
-    quote: `你以「${first}」为底色，也在「${second}」中寻找答案。继续把自己的判断，活成真实的选择。`
-  };
+function getPersonalSignature(top1, top2) {
+  const comboKey = `${top1}+${top2}`;
+  const reverseKey = `${top2}+${top1}`;
+  return titleMap[comboKey] || titleMap[reverseKey] || titleMap["default"];
 }
 function getSocialAdvice() {
   const personal = userScores['个人'], collective = userScores['集体'];
