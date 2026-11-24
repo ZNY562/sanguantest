@@ -67,6 +67,12 @@
       transform: scale(.985);
     }
 
+    .option-btn.selected {
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, .12);
+      box-shadow: 0 0 0 1px rgba(251, 191, 36, .25), 0 0 24px rgba(251, 191, 36, .08);
+    }
+
     #radar {
       width: 100%;
       height: 340px;
@@ -152,8 +158,8 @@
       }
 
       .option-btn {
-        min-height: 3.5rem;
-        padding: .85rem 1rem;
+        min-height: 3.75rem;
+        padding: 1rem;
         font-size: .96rem;
         line-height: 1.65;
         overflow-wrap: anywhere;
@@ -216,7 +222,8 @@
       }
 
       #radar {
-        height: 290px;
+        width: 100%;
+        height: 350px;
       }
 
       #summary {
@@ -260,10 +267,10 @@
   </style>
 </head>
 <body class="min-h-screen glow">
-  <main class="mx-auto flex min-h-screen w-full max-w-4xl items-center justify-center px-5 py-10">
+  <main class="mx-auto flex min-h-screen w-full max-w-4xl items-center justify-center px-4 py-10 sm:px-5">
     <section id="welcome" class="screen w-full max-w-2xl text-center">
       <div class="mb-8 text-xs tracking-[.4em] text-amber-400">A MOMENT OF REFLECTION</div>
-      <h1 class="font-serif text-4xl font-medium leading-tight text-slate-100 sm:text-6xl">三观自测<span class="text-amber-400">：</span><br class="sm:hidden">认清你自己</h1>
+      <h1 class="font-serif text-3xl font-medium leading-tight text-slate-100 sm:text-5xl md:text-6xl">三观自测<span class="text-amber-400">：</span><br class="sm:hidden">认清你自己</h1>
       <p class="mt-6 text-lg text-slate-300">二十个选择，照见你理解世界的方式</p>
       <p class="mx-auto mt-5 max-w-xl leading-8 text-slate-400">这不是一场标准答案的考试。请跟随直觉，选择最贴近此刻真实想法的选项，在关于意义、自由、时间与他人的问题中，描绘属于你的精神图景。</p>
       <button id="startBtn" class="mt-10 rounded-full border border-amber-400/70 bg-amber-400 px-9 py-3.5 font-medium text-slate-950 transition hover:bg-amber-300">开始探索 <span aria-hidden="true">→</span></button>
@@ -283,8 +290,8 @@
       <p class="font-serif text-xl tracking-wide text-amber-300">正在构建你的精神图景...</p>
     </section>
     <section id="result" class="screen hidden-screen w-full max-w-4xl">
-      <header class="mb-8 text-center"><div class="text-xs tracking-[.35em] text-amber-400">YOUR INNER LANDSCAPE</div><h2 class="mt-3 font-serif text-3xl text-slate-100 sm:text-4xl">你的精神图景</h2><p class="mt-2 text-sm text-slate-400">二十次选择，拼成此刻的你</p></header>
-      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-7 text-center shadow-xl sm:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属头衔</div><h3 id="titleText" class="mt-4 font-serif text-3xl font-semibold leading-relaxed text-amber-200 sm:text-4xl"></h3><p id="titleSubtext" class="mt-3 text-sm text-slate-400"></p></article>
+      <header class="mb-8 text-center"><div class="text-xs tracking-[.35em] text-amber-400">YOUR INNER LANDSCAPE</div><h2 class="mt-3 font-serif text-2xl text-slate-100 sm:text-3xl md:text-4xl">你的精神图景</h2><p class="mt-2 text-sm text-slate-400">二十次选择，拼成此刻的你</p></header>
+      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-5 text-center shadow-xl sm:p-8 md:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属头衔</div><h3 id="titleText" class="mt-4 font-serif text-2xl font-semibold leading-relaxed text-amber-200 sm:text-3xl md:text-4xl"></h3><p id="titleSubtext" class="mt-3 text-sm text-slate-400"></p></article>
       <article class="mb-6 rounded-2xl border border-slate-700/70 bg-slate-800/40 p-4 sm:p-6"><div class="mb-1 text-center"><h3 class="font-serif text-xl text-slate-100">你的三观能量图</h3><p class="mt-1 text-xs text-slate-500">得分越高，代表本次回答中该维度出现得越频繁</p></div><div id="radar" role="img" aria-label="前六名价值观维度雷达图"></div></article>
       <section class="mb-6"><div class="mb-4 flex items-end justify-between"><div><div class="text-xs tracking-[.25em] text-amber-400">DEEP READING</div><h3 class="mt-2 font-serif text-2xl text-slate-100">多维深度解析</h3></div><span class="text-xs text-slate-500">前四维度</span></div><div id="summary" class="grid gap-4 sm:grid-cols-2"></div></section>
       <section class="mb-6 grid gap-4 md:grid-cols-2"><article class="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">◈</span><div><div class="text-xs tracking-widest text-slate-500">RELATIONSHIPS</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的社交风格</h3></div></div><p id="socialAdvice" class="text-sm leading-7 text-slate-300"></p></article><article class="rounded-2xl border border-amber-400/20 bg-amber-400/[.05] p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">✦</span><div><div class="text-xs tracking-widest text-slate-500">A NOTE TO YOU</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的生活建议</h3></div></div><p id="lifeAdvice" class="text-sm leading-7 text-slate-300"></p></article></section>
@@ -441,9 +448,10 @@ const dimensions = Object.keys(dimensionDesc);
 let userScores = Object.fromEntries(dimensions.map(name => [name, 0]));
 let questionIndex = 0;
 let chart = null;
+let chartResizeObserver = null;
 const screens = [...document.querySelectorAll('.screen')];
 function showScreen(id){screens.forEach(el=>{el.classList.add('hidden-screen');el.classList.remove('entering')});const target=document.getElementById(id);target.classList.remove('hidden-screen');target.classList.add('entering');requestAnimationFrame(()=>target.classList.remove('entering'));window.scrollTo({top:0,behavior:'smooth'})}
-function renderQuestion(){const item=questions[questionIndex];document.getElementById('progressText').textContent=`${questionIndex+1} / ${questions.length}`;document.getElementById('progressBar').style.width=`${((questionIndex+1)/questions.length)*100}%`;document.getElementById('questionIndex').textContent=`QUESTION ${String(questionIndex+1).padStart(2,'0')}`;document.getElementById('questionText').textContent=item.q;const container=document.getElementById('options');container.replaceChildren();item.options.forEach((option,index)=>{const button=document.createElement('button');button.type='button';button.className='option-btn w-full rounded-xl border border-slate-700 bg-slate-800/60 px-5 py-4 text-left leading-7 text-slate-200 hover:border-amber-400/70 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400/60';const marker=document.createElement('span');marker.className='mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-600 text-xs text-amber-400';marker.textContent=String.fromCharCode(65+index);button.append(marker,document.createTextNode(option.text));button.addEventListener('click',()=>chooseOption(option));container.append(button)})}
+function renderQuestion(){const item=questions[questionIndex];document.getElementById('progressText').textContent=`${questionIndex+1} / ${questions.length}`;document.getElementById('progressBar').style.width=`${((questionIndex+1)/questions.length)*100}%`;document.getElementById('questionIndex').textContent=`QUESTION ${String(questionIndex+1).padStart(2,'0')}`;document.getElementById('questionText').textContent=item.q;const container=document.getElementById('options');container.dataset.answerLocked='false';container.replaceChildren();item.options.forEach((option,index)=>{const button=document.createElement('button');button.type='button';button.className='option-btn w-full rounded-xl border border-slate-700 bg-slate-800/60 px-5 py-4 text-left leading-7 text-slate-200 hover:border-amber-400/70 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400/60';const marker=document.createElement('span');marker.className='mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-600 text-xs text-amber-400';marker.textContent=String.fromCharCode(65+index);button.append(marker,document.createTextNode(option.text));button.addEventListener('click',()=>{if(container.dataset.answerLocked==='true')return;container.dataset.answerLocked='true';container.querySelectorAll('button').forEach(choice=>choice.disabled=true);button.classList.add('selected');window.setTimeout(()=>{container.dataset.answerLocked='false';chooseOption(option)},300)});container.append(button)})}
 function chooseOption(option){Object.entries(option.score).forEach(([dimension,points])=>{if(Object.hasOwn(userScores,dimension))userScores[dimension]+=points});questionIndex++;if(questionIndex<questions.length){renderQuestion()}else{showScreen('loading');window.setTimeout(showResults,850)}}
 const deepDesc = {
   "享乐":"你珍惜具体而真实的快乐，懂得把生活过成值得回味的体验。别让即时满足替你做完所有长期选择。",
@@ -515,6 +523,7 @@ function showResults(){
   showScreen('result');
   requestAnimationFrame(()=>{
     if(!chart)chart=echarts.init(document.getElementById('radar'));
+    if(!chartResizeObserver){chartResizeObserver=new ResizeObserver(()=>chart?.resize());chartResizeObserver.observe(document.getElementById('radar'))}
     chart.setOption({animationDuration:700,tooltip:{trigger:'item',formatter:params=>`${params.name}<br>${params.value.map((value,index)=>`${topSix[index][0]}：${value}分`).join('<br>')}`},radar:{center:['50%','53%'],radius:'66%',indicator:topSix.map(([name])=>({name,max:Math.max(1,dimensionMaxScores[name])})),axisName:{color:'#e2e8f0',fontSize:12},axisLine:{lineStyle:{color:'rgba(148,163,184,.35)'}},splitLine:{lineStyle:{color:'rgba(148,163,184,.2)'}},splitArea:{areaStyle:{color:['rgba(30,41,59,.18)','rgba(51,65,85,.22)']}}},series:[{type:'radar',data:[{value:topSix.map(([,score])=>score),name:'你的倾向',symbol:'circle',symbolSize:6,lineStyle:{color:'#fbbf24',width:2},itemStyle:{color:'#fbbf24'},areaStyle:{color:'rgba(251,191,36,.22)'}}]}]});chart.resize();
   });
 }
@@ -523,6 +532,4 @@ document.getElementById('startBtn').addEventListener('click',()=>{questionIndex=
 </script>
 </body>
 </html>
-
-
 
