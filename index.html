@@ -206,6 +206,12 @@
         line-height: 1.7;
       }
 
+      #titleQuote {
+        margin-top: .65rem;
+        font-size: .9rem;
+        line-height: 1.8;
+      }
+
       #result > article:nth-of-type(2) {
         margin-bottom: 1.25rem;
         padding: 1rem .65rem .5rem;
@@ -291,7 +297,7 @@
     </section>
     <section id="result" class="screen hidden-screen w-full max-w-4xl">
       <header class="mb-8 text-center"><div class="text-xs tracking-[.35em] text-amber-400">YOUR INNER LANDSCAPE</div><h2 class="mt-3 font-serif text-2xl text-slate-100 sm:text-3xl md:text-4xl">你的精神图景</h2><p class="mt-2 text-sm text-slate-400">二十次选择，拼成此刻的你</p></header>
-      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-5 text-center shadow-xl sm:p-8 md:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属头衔</div><h3 id="titleText" class="mt-4 font-serif text-2xl font-semibold leading-relaxed text-amber-200 sm:text-3xl md:text-4xl"></h3><p id="titleSubtext" class="mt-3 text-sm text-slate-400"></p></article>
+      <article class="relative mb-6 overflow-hidden rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-400/10 via-slate-800/80 to-slate-900 p-5 text-center shadow-xl sm:p-8 md:p-10"><div class="text-xs tracking-[.3em] text-amber-400">专属标签 · YOUR SIGNATURE</div><h3 id="titleText" class="mt-4 font-serif text-2xl font-semibold leading-relaxed text-amber-200 sm:text-3xl md:text-4xl"></h3><p id="titleQuote" class="mx-auto mt-3 max-w-2xl text-sm italic leading-7 text-slate-300"></p><p id="titleSubtext" class="mt-3 text-xs tracking-wide text-slate-500"></p></article>
       <article class="mb-6 rounded-2xl border border-slate-700/70 bg-slate-800/40 p-4 sm:p-6"><div class="mb-1 text-center"><h3 class="font-serif text-xl text-slate-100">你的三观能量图</h3><p class="mt-1 text-xs text-slate-500">得分越高，代表本次回答中该维度出现得越频繁</p></div><div id="radar" role="img" aria-label="前六名价值观维度雷达图"></div></article>
       <section class="mb-6"><div class="mb-4 flex items-end justify-between"><div><div class="text-xs tracking-[.25em] text-amber-400">DEEP READING</div><h3 class="mt-2 font-serif text-2xl text-slate-100">多维深度解析</h3></div><span class="text-xs text-slate-500">前四维度</span></div><div id="summary" class="grid gap-4 sm:grid-cols-2"></div></section>
       <section class="mb-6 grid gap-4 md:grid-cols-2"><article class="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">◈</span><div><div class="text-xs tracking-widest text-slate-500">RELATIONSHIPS</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的社交风格</h3></div></div><p id="socialAdvice" class="text-sm leading-7 text-slate-300"></p></article><article class="rounded-2xl border border-amber-400/20 bg-amber-400/[.05] p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">✦</span><div><div class="text-xs tracking-widest text-slate-500">A NOTE TO YOU</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的生活建议</h3></div></div><p id="lifeAdvice" class="text-sm leading-7 text-slate-300"></p></article></section>
@@ -486,6 +492,25 @@ function getTitle(first, second) {
   };
   return titles[pair] || titles[reversePair] || `以「${first}」为底色的${second}探索者`;
 }
+const signatureByPair = {
+  '虚无|佛系': { title: '赛博游侠', quote: '看透了世界的荒诞，决定用躺平来热爱生活。' },
+  '自我实现|理性': { title: '冷酷实干家', quote: '摒弃情绪的内耗，用逻辑和结果丈量世界。' },
+  '享乐|存在': { title: '存在主义玩家', quote: '既然人生本无意义，不如把今天过得尽兴。' },
+  '利他|精神': { title: '人间治愈师', quote: '你的温柔有力量，在照亮别人的同时也温暖了自己。' },
+  '积极|自我实现': { title: '破晓行动派', quote: '把相信未来当作燃料，再用今天的行动让它发生。' },
+  '个人|自由': { title: '边界自由人', quote: '忠于内心的方向，也尊重他人选择生活的权利。' },
+  '理性|经验': { title: '现实求真者', quote: '不迷信空谈，让证据和亲历替你给世界下判断。' },
+  '集体|利他': { title: '理想同行者', quote: '把善意落到协作里，让每一次付出都能改变现实。' },
+  '当下|享乐': { title: '此刻收藏家', quote: '不把快乐寄存在未来，认真收集眼前真实的欢喜。' },
+  '保守|物质': { title: '稳健筑梦人', quote: '先把生活的地基打牢，再从容追逐想要的风景。' }
+};
+function getPersonalSignature(first, second) {
+  const signature = signatureByPair[`${first}|${second}`] || signatureByPair[`${second}|${first}`];
+  return signature || {
+    title: getTitle(first, second),
+    quote: `你以「${first}」为底色，也在「${second}」中寻找答案。继续把自己的判断，活成真实的选择。`
+  };
+}
 function getSocialAdvice() {
   const personal = userScores['个人'], collective = userScores['集体'];
   const kind = userScores['人性善'], guarded = userScores['人性恶'];
@@ -503,7 +528,9 @@ function showResults(){
   const ranking=Object.entries(userScores).sort((a,b)=>b[1]-a[1]||dimensions.indexOf(a[0])-dimensions.indexOf(b[0]));
   const topFour=ranking.slice(0,4),topSix=ranking.slice(0,6);
   const dimensionMaxScores=Object.fromEntries(dimensions.map(name=>[name,questions.filter(item=>item.options.some(option=>Object.hasOwn(option.score,name))).length]));
-  document.getElementById('titleText').textContent=`【${getTitle(topFour[0][0],topFour[1][0])}】`;
+  const signature=getPersonalSignature(topFour[0][0],topFour[1][0]);
+  document.getElementById('titleText').textContent=`【${signature.title}】`;
+  document.getElementById('titleQuote').textContent=`“${signature.quote}”`;
   document.getElementById('titleSubtext').textContent=`核心倾向：${topFour[0][0]} · ${topFour[1][0]}`;
   const summary=document.getElementById('summary');
   summary.replaceChildren(...topFour.map(([name,score],index)=>{
