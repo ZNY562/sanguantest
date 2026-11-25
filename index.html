@@ -481,23 +481,83 @@ const deepDesc = {
   "人性善":"你愿意先看见他人的善意与合作可能，这让关系有了温度。保持信任的同时辨认行动和边界，善良无需放弃自我保护。",
   "人性恶":"你对利益与风险保持警觉，不轻易把信任交出去。这份清醒能保护你，也别让防备替所有关系预设结局。"
 };
-const titleMap = {
-  "虚无+佛系": { title: "赛博游侠", quote: "看透了世界的荒诞，决定用躺平来热爱生活。" },
-  "虚无+个人": { title: "孤岛观察者", quote: "既看见善意也留意风险，给关系一点观察时间。" },
-  "佛系+个人": { title: "精神独行客", quote: "放下不由你控制的事，也别放下仍能改变的事。" },
-  "自我实现+理性": { title: "冷酷实干家", quote: "摒弃情绪的内耗，用逻辑和结果丈量世界。" },
-  "自我实现+自由": { title: "旷野拓荒者", quote: "规则是死的，人是活的，你的边界由你自己定义。" },
-  "享乐+存在": { title: "存在主义玩家", quote: "既然人生本无意义，不如把今天过得尽兴。" },
-  "享乐+当下": { title: "体验派大玩家", quote: "昨天是历史，明天是谜团，只有今天是礼物。" },
-  "利他+精神": { title: "人间治愈师", quote: "你的温柔有力量，在照亮别人的同时也温暖了自己。" },
-  "集体+积极": { title: "秩序守护者", quote: "你相信微光汇聚成炬，愿意为更好的世界发声。" },
-  "顺应+经验": { title: "现实主义智者", quote: "不强求逆流而上，懂得借力打力才是生存哲学。" },
-  "default": { title: "三观漫游者", quote: "你是一个复杂的矛盾体，在混沌中寻找属于自己的自洽。" }
+const resultMap = {
+  // 1. 存在主义系列
+  "存在+自由": { title: "赛博游侠", quote: "看透了世界的荒诞，决定用自由选择来热爱生活。" },
+  "存在+虚无": { title: "荒诞派诗人", quote: "既然人生本无意义，不如在虚无的底色上，画出属于自己的画卷。" },
+  "存在+当下": { title: "绝对的体验派", quote: "不念过去，不畏将来，你只对自己此刻的生命体验负责。" },
+  "存在+自我实现": { title: "孤勇造物主", quote: "拒绝被定义，你用行动和创造，在荒野中开辟自己的路。" },
+  "存在+顺应": { title: "禅意哲学家", quote: "认清了命运的无常，依然选择在每一个当下自由地呼吸。" },
+
+  // 2. 佛系与虚无系列
+  "佛系+当下": { title: "松弛感大师", quote: "万物皆有时，你不争不抢，却总能精准接住生活抛来的彩蛋。" },
+  "佛系+虚无": { title: "精神躺平家", quote: "世界是个巨大的草台班子，你优雅地坐在台下，看戏但不入戏。" },
+  "佛系+个人": { title: "都市隐士", quote: "远离人群的内耗，你在自己的小宇宙里，构建了完美的桃花源。" },
+  "虚无+个人": { title: "冷酷旁观者", quote: "你对群体狂欢保持警惕，觉得一切毫无意义，不如独善其身。" },
+  "虚无+理性": { title: "清醒的悲观者", quote: "你用逻辑看穿了一切荒谬，虽然觉得没救，但依然保持理智。" },
+  "顺应+现实": { title: "人间清醒客", quote: "不撞南墙不回头是傻瓜，你懂得顺应规则，在有限的空间里活得最舒坦。" },
+
+  // 3. 积极与自我实现系列
+  "自我实现+积极": { title: "热血攀登者", quote: "你的眼里只有山顶，所有的挫折都只是你通关路上的经验值。" },
+  "自我实现+理性": { title: "冷酷实干家", quote: "摒弃情绪内耗，用逻辑和结果丈量世界，你是效率至上的破局者。" },
+  "自我实现+经验": { title: "硬核迭代者", quote: "不迷信权威，只相信亲手试出来的真理，你每天都在更新版本。" },
+  "自我实现+精神": { title: "灵魂雕刻师", quote: "物质只是工具，你终其一生都在追求内心的丰盈与精神的极致。" },
+  "积极+理性": { title: "秩序重建者", quote: "世界充满混乱，但你坚信凭借人类的理性和努力，一切都能被治愈。" },
+  "积极+集体": { title: "六边形战士", quote: "你把个人的力量融入群体，为了共同的宏大目标，时刻准备着。" },
+  "积极+线性时间": { title: "未来乐观派", quote: "你坚信时间是一条向上的线，只要往前走，明天一定会更好。" },
+
+  // 4. 情感与人际关系系列
+  "利他+人性善": { title: "人间小太阳", quote: "你永远相信善意能换来善意，用温柔和共情治愈着周围的人。" },
+  "利他+集体": { title: "理想主义圣徒", quote: "别人的幸福比你自己更重要，你愿意为了大我，燃烧自己的小我。" },
+  "利他+精神": { title: "精神布道者", quote: "你看重灵魂的共鸣，比起物质施舍，你更愿意给迷茫的人点亮一盏灯。" },
+  "个人+自由": { title: "旷野里的风", quote: "讨厌被定义，拒绝被束缚，你的人生字典里没有‘应该’，只有‘我愿意’。" },
+  "个人+理性": { title: "边界感卫士", quote: "亲兄弟明算账，保持理智的距离，是你对彼此最大的尊重。" },
+  "人性恶+经验": { title: "现实主义刺猬", quote: "你深知人性的幽暗，不轻易交心，但你长出的每一根刺，都是为了保护柔软。" },
+
+  // 5. 物质与享乐系列
+  "享乐+物质": { title: "快乐体验官", quote: "赚钱就是为了花，如果今晚的晚霞很美，你绝不会为了省钱而错过。" },
+  "享乐+经验": { title: "五感捕手", quote: "书上的大道理不如亲自去吃一顿大餐，你的人生信条是体验至上。" },
+  "享乐+人性善": { title: "纯真享乐派", quote: "你觉得世界上都是好人，所以从不设防，快乐得像个长不大的孩子。" },
+  "物质+理性": { title: "精算师", quote: "万物皆有价，你从不做亏本买卖，每一分投入都要看到实打实的回报。" },
+
+  // 6. 时间与历史观系列
+  "线性时间+理性": { title: "星辰赶路人", quote: "过去不可追，未来不可控，你只相信用当下的汗水和逻辑铺就的直线。" },
+  "当下+经验": { title: "红尘修行者", quote: "不空谈虚无缥缈的未来，你只相信此刻吃饱穿暖、感受真切的风。" }
 };
-function getPersonalSignature(top1, top2) {
-  const comboKey = `${top1}+${top2}`;
-  const reverseKey = `${top2}+${top1}`;
-  return titleMap[comboKey] || titleMap[reverseKey] || titleMap["default"];
+function getPersonalSignature(ranking) {
+  const highestScore = ranking[0][1];
+  const leaders = ranking.filter(([, score]) => score === highestScore);
+  const secondScore = ranking.find(([, score]) => score < highestScore)?.[1] ?? highestScore;
+  const secondGroup = ranking.filter(([, score]) => score === secondScore);
+  const candidates = [];
+
+  if (leaders.length > 1) {
+    for (let firstIndex = 0; firstIndex < leaders.length; firstIndex++) {
+      for (let secondIndex = firstIndex + 1; secondIndex < leaders.length; secondIndex++) {
+        candidates.push([leaders[firstIndex][0], leaders[secondIndex][0]]);
+      }
+    }
+  }
+
+  for (const [first] of leaders) {
+    for (const [second] of secondGroup) {
+      if (first !== second) candidates.push([first, second]);
+    }
+  }
+
+  for (const [top1, top2] of candidates) {
+    const comboKey = `${top1}+${top2}`;
+    const reverseKey = `${top2}+${top1}`;
+    const match = resultMap[comboKey] || resultMap[reverseKey];
+    if (match) return { ...match, dimensions: [top1, top2] };
+  }
+
+  const [top1, top2] = candidates[0] || [leaders[0][0], secondGroup.find(([name]) => name !== leaders[0][0])?.[0] || leaders[1]?.[0] || leaders[0][0]];
+  return {
+    title: "独特的探索者",
+    quote: `你的内心世界极其丰富，既有【${top1}】的底色，又带着【${top2}】的锋芒，你不需要被任何人定义。`,
+    dimensions: [top1, top2]
+  };
 }
 function getSocialAdvice() {
   const personal = userScores['个人'], collective = userScores['集体'];
@@ -516,10 +576,10 @@ function showResults(){
   const ranking=Object.entries(userScores).sort((a,b)=>b[1]-a[1]||dimensions.indexOf(a[0])-dimensions.indexOf(b[0]));
   const topFour=ranking.slice(0,4),topSix=ranking.slice(0,6);
   const dimensionMaxScores=Object.fromEntries(dimensions.map(name=>[name,questions.filter(item=>item.options.some(option=>Object.hasOwn(option.score,name))).length]));
-  const signature=getPersonalSignature(topFour[0][0],topFour[1][0]);
+  const signature=getPersonalSignature(ranking);
   document.getElementById('titleText').textContent=`【${signature.title}】`;
   document.getElementById('titleQuote').textContent=`“${signature.quote}”`;
-  document.getElementById('titleSubtext').textContent=`核心倾向：${topFour[0][0]} · ${topFour[1][0]}`;
+  document.getElementById('titleSubtext').textContent=`核心倾向：${signature.dimensions[0]} · ${signature.dimensions[1]}`;
   const summary=document.getElementById('summary');
   summary.replaceChildren(...topFour.map(([name,score],index)=>{
     const card=document.createElement('article');card.className='rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6';
