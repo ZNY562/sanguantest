@@ -73,6 +73,25 @@
       box-shadow: 0 0 0 1px rgba(251, 191, 36, .25), 0 0 24px rgba(251, 191, 36, .08);
     }
 
+    .accordion-panel {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .45s ease, opacity .3s ease;
+    }
+
+    .accordion-panel.open {
+      opacity: 1;
+    }
+
+    .accordion-chevron {
+      transition: transform .25s ease;
+    }
+
+    .accordion-toggle[aria-expanded="true"] .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
     #radar {
       width: 100%;
       height: 340px;
@@ -301,6 +320,15 @@
       <article class="mb-6 rounded-2xl border border-slate-700/70 bg-slate-800/40 p-4 sm:p-6"><div class="mb-1 text-center"><h3 class="font-serif text-xl text-slate-100">你的三观能量图</h3><p class="mt-1 text-xs text-slate-500">得分越高，代表本次回答中该维度出现得越频繁</p></div><div id="radar" role="img" aria-label="前六名价值观维度雷达图"></div></article>
       <section class="mb-6"><div class="mb-4 flex items-end justify-between"><div><div class="text-xs tracking-[.25em] text-amber-400">DEEP READING</div><h3 class="mt-2 font-serif text-2xl text-slate-100">多维深度解析</h3></div><span class="text-xs text-slate-500">前四维度</span></div><div id="summary" class="grid gap-4 sm:grid-cols-2"></div></section>
       <section class="mb-6 grid gap-4 md:grid-cols-2"><article class="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">◈</span><div><div class="text-xs tracking-widest text-slate-500">RELATIONSHIPS</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的社交风格</h3></div></div><p id="socialAdvice" class="text-sm leading-7 text-slate-300"></p></article><article class="rounded-2xl border border-amber-400/20 bg-amber-400/[.05] p-5 sm:p-6"><div class="mb-3 flex items-center gap-3"><span class="text-xl text-amber-400">✦</span><div><div class="text-xs tracking-widest text-slate-500">A NOTE TO YOU</div><h3 class="mt-1 text-lg font-medium text-slate-100">你的生活建议</h3></div></div><p id="lifeAdvice" class="text-sm leading-7 text-slate-300"></p></article></section>
+      <section class="mb-6 overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-800/40">
+        <button id="dimensionReportToggle" class="accordion-toggle flex min-h-14 w-full items-center justify-between gap-4 px-4 py-4 text-left text-slate-100 transition hover:bg-slate-800/80 sm:px-5" type="button" aria-expanded="false" aria-controls="dimensionReportPanel">
+          <span class="font-medium">查看完整维度解析报告</span>
+          <span class="accordion-chevron text-amber-400" aria-hidden="true">⌄</span>
+        </button>
+        <div id="dimensionReportPanel" class="accordion-panel" aria-hidden="true" inert>
+          <div id="dimensionReportList" class="border-t border-slate-700/70 px-4 sm:px-5"></div>
+        </div>
+      </section>
       <button id="restartBtn" class="mx-auto mt-8 block rounded-full border border-amber-400/70 px-8 py-3 text-amber-300 transition hover:bg-amber-400 hover:text-slate-950">重新测试</button>
       <p class="mt-5 text-center text-xs text-slate-600">结果仅供自我观察与交流，不构成固定的人格定义。</p>
     </section>
@@ -566,6 +594,83 @@ function getLifeAdvice(topFour) {
   };
   return `你的选择呈现出${topFour.slice(0,3).map(([name])=>`「${name}」`).join('、')}的底色。${advice[topFour[0][0]]}把优势用在真实生活里，也给自己保留调整方向的余地。`;
 }
+function renderDimensionReport(ranking) {
+  const list = document.getElementById('dimensionReportList');
+  const tagStyles = [
+    'bg-amber-400/15 text-amber-300',
+    'bg-violet-400/15 text-violet-300',
+    'bg-sky-400/15 text-sky-300'
+  ];
+
+  list.replaceChildren(...ranking.map(([name, score], index) => {
+    const row = document.createElement('article');
+    row.className = 'border-b border-slate-700/60 py-4 last:border-b-0';
+
+    const heading = document.createElement('div');
+    heading.className = 'flex items-center justify-between gap-3';
+
+    const dimension = document.createElement('div');
+    dimension.className = 'flex min-w-0 items-center gap-2';
+
+    const nameLabel = document.createElement('h4');
+    nameLabel.className = 'font-medium text-slate-100';
+    nameLabel.textContent = name;
+    dimension.append(nameLabel);
+
+    if (index < 3) {
+      const tag = document.createElement('span');
+      tag.className = `shrink-0 rounded-full px-2 py-1 text-[10px] ${tagStyles[index]}`;
+      tag.textContent = '主导倾向';
+      dimension.append(tag);
+    }
+
+    const scoreLabel = document.createElement('span');
+    scoreLabel.className = 'shrink-0 text-sm tabular-nums text-amber-300';
+    scoreLabel.textContent = `${score} 分`;
+    heading.append(dimension, scoreLabel);
+
+    const description = document.createElement('p');
+    description.className = 'mt-2 text-xs leading-6 text-slate-400';
+    description.textContent = dimensionDesc[name];
+
+    row.append(heading, description);
+    return row;
+  }));
+}
+
+const dimensionReportToggle = document.getElementById('dimensionReportToggle');
+const dimensionReportPanel = document.getElementById('dimensionReportPanel');
+function resetDimensionReport() {
+  dimensionReportToggle.setAttribute('aria-expanded', 'false');
+  dimensionReportPanel.setAttribute('aria-hidden', 'true');
+  dimensionReportPanel.classList.remove('open');
+  dimensionReportPanel.style.maxHeight = '0px';
+  dimensionReportPanel.inert = true;
+}
+dimensionReportToggle.addEventListener('click', () => {
+  const isOpen = dimensionReportToggle.getAttribute('aria-expanded') === 'true';
+  dimensionReportToggle.setAttribute('aria-expanded', String(!isOpen));
+  dimensionReportPanel.setAttribute('aria-hidden', String(isOpen));
+
+  if (isOpen) {
+    dimensionReportPanel.style.maxHeight = `${dimensionReportPanel.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      dimensionReportPanel.classList.remove('open');
+      dimensionReportPanel.style.maxHeight = '0px';
+    });
+    dimensionReportPanel.inert = true;
+    return;
+  }
+
+  dimensionReportPanel.inert = false;
+  dimensionReportPanel.classList.add('open');
+  dimensionReportPanel.style.maxHeight = `${dimensionReportPanel.scrollHeight}px`;
+});
+dimensionReportPanel.addEventListener('transitionend', event => {
+  if (event.propertyName === 'max-height' && dimensionReportToggle.getAttribute('aria-expanded') === 'true') {
+    dimensionReportPanel.style.maxHeight = 'none';
+  }
+});
 function showResults(){
   const ranking=Object.entries(userScores).sort((a,b)=>b[1]-a[1]||dimensions.indexOf(a[0])-dimensions.indexOf(b[0]));
   const topFour=ranking.slice(0,4),topSix=ranking.slice(0,6);
@@ -589,6 +694,7 @@ function showResults(){
   }));
   document.getElementById('socialAdvice').textContent=getSocialAdvice();
   document.getElementById('lifeAdvice').textContent=getLifeAdvice(topFour);
+  renderDimensionReport(ranking);
   showScreen('result');
   requestAnimationFrame(()=>{
     if(!chart)chart=echarts.init(document.getElementById('radar'));
@@ -596,7 +702,7 @@ function showResults(){
     chart.setOption({animationDuration:700,tooltip:{trigger:'item',formatter:params=>`${params.name}<br>${params.value.map((value,index)=>`${topSix[index][0]}：${value}分`).join('<br>')}`},radar:{center:['50%','53%'],radius:'66%',indicator:topSix.map(([name])=>({name,max:Math.max(1,dimensionMaxScores[name])})),axisName:{color:'#e2e8f0',fontSize:12},axisLine:{lineStyle:{color:'rgba(148,163,184,.35)'}},splitLine:{lineStyle:{color:'rgba(148,163,184,.2)'}},splitArea:{areaStyle:{color:['rgba(30,41,59,.18)','rgba(51,65,85,.22)']}}},series:[{type:'radar',data:[{value:topSix.map(([,score])=>score),name:'你的倾向',symbol:'circle',symbolSize:6,lineStyle:{color:'#fbbf24',width:2},itemStyle:{color:'#fbbf24'},areaStyle:{color:'rgba(251,191,36,.22)'}}]}]});chart.resize();
   });
 }
-function restart(){userScores=Object.fromEntries(dimensions.map(name=>[name,0]));questionIndex=0;if(chart){chart.dispose();chart=null}showScreen('welcome')}
+function restart(){userScores=Object.fromEntries(dimensions.map(name=>[name,0]));questionIndex=0;resetDimensionReport();if(chart){chart.dispose();chart=null}showScreen('welcome')}
 document.getElementById('startBtn').addEventListener('click',()=>{questionIndex=0;userScores=Object.fromEntries(dimensions.map(name=>[name,0]));renderQuestion();showScreen('quiz')});document.getElementById('restartBtn').addEventListener('click',restart);window.addEventListener('resize',()=>chart?.resize());
 </script>
 </body>
