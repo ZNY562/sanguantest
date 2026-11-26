@@ -509,7 +509,7 @@ const deepDesc = {
   "人性善":"你愿意先看见他人的善意与合作可能，这让关系有了温度。保持信任的同时辨认行动和边界，善良无需放弃自我保护。",
   "人性恶":"你对利益与风险保持警觉，不轻易把信任交出去。这份清醒能保护你，也别让防备替所有关系预设结局。"
 };
-const resultMap = {
+const curatedResultMap = {
   // 这些 Key 仅使用 dimensionDesc 中定义的计分维度。
   "存在+自由": { title: "赛博游侠", quote: "看透荒诞之后，仍用自由选择热爱生活。" },
   "存在+虚无": { title: "荒诞派诗人", quote: "在意义的留白处，亲手画出自己的世界。" },
@@ -542,6 +542,47 @@ const resultMap = {
   "精神+理性": { title: "清明思辨者", quote: "让理性照亮信念，也让信念为生活保留温度。" },
   "个人+物质": { title: "独立生活家", quote: "靠自己的判断经营生活，把选择权握在手里。" }
 };
+const dimensionResultProfiles = {
+  "享乐": { title: "欢愉生活家", insight: "懂得认真感受快乐，也记得为明天留一份从容。" },
+  "自我实现": { title: "潜能开拓者", insight: "愿意把潜能变成行动，不让目标遮住生活本身。" },
+  "利他": { title: "温柔同行者", insight: "把关怀落到细节，也给自己的善意留好边界。" },
+  "佛系": { title: "松弛观察者", insight: "懂得顺势而行，也不放弃仍能改变的部分。" },
+  "积极": { title: "向前行动派", insight: "相信行动能够创造变化，也允许自己适时停靠。" },
+  "虚无": { title: "清醒旁观者", insight: "看穿宏大叙事之后，仍愿意回应具体的人和事。" },
+  "存在": { title: "意义创造者", insight: "不等待现成答案，用选择写下自己的解释。" },
+  "顺应": { title: "从容应变者", insight: "看懂环境的潮汐，也为自己留下转向的空间。" },
+  "线性时间": { title: "星辰赶路人", insight: "把目光投向未来，也认真走过脚下的每一步。" },
+  "当下": { title: "此刻收藏家", insight: "珍惜眼前真实的感受，也为未来保留余地。" },
+  "个人": { title: "边界守护者", insight: "珍视自主与空间，也让重要的人有靠近的可能。" },
+  "集体": { title: "共同行动者", insight: "在共同目标中找到力量，也不丢下自己的声音。" },
+  "物质": { title: "现实规划师", insight: "重视生活的现实根基，也给无形的满足留位置。" },
+  "精神": { title: "灵魂探索者", insight: "追求内在丰盈，并努力把理想带进日常。" },
+  "保守": { title: "秩序守望者", insight: "珍视可靠的经验，也愿意为新可能留一道门。" },
+  "自由": { title: "旷野追风者", insight: "珍惜选择的空间，也承担选择带来的责任。" },
+  "理性": { title: "逻辑思辨者", insight: "拆解问题、检验证据，让判断经得起推敲。" },
+  "经验": { title: "实证探索者", insight: "相信亲历与观察，也持续接纳新的证据。" },
+  "人性善": { title: "善意传递者", insight: "愿意给善意一份空间，也保持清醒的分寸。" },
+  "人性恶": { title: "清醒防护者", insight: "看见利益与风险，也不让防备封闭所有关系。" }
+};
+function canonicalResultKey(first, second) {
+  return dimensions.indexOf(first) < dimensions.indexOf(second)
+    ? `${first}+${second}`
+    : `${second}+${first}`;
+}
+const resultMap = Object.fromEntries(dimensions.flatMap((first, index) =>
+  dimensions.slice(index + 1).map(second => {
+    const firstProfile = dimensionResultProfiles[first];
+    const secondProfile = dimensionResultProfiles[second];
+    return [canonicalResultKey(first, second), {
+      title: `${firstProfile.title}与${secondProfile.title}的双重奏`,
+      quote: `你以「${first}」为底色，也让「${second}」参与选择。${firstProfile.insight}${secondProfile.insight}`
+    }];
+  })
+));
+for (const [key, result] of Object.entries(curatedResultMap)) {
+  const [first, second] = key.split('+');
+  resultMap[canonicalResultKey(first, second)] = result;
+}
 const invalidResultMapKeys = Object.keys(resultMap).filter(key =>
   key.split('+').some(dimension => !dimensions.includes(dimension))
 );
