@@ -509,84 +509,59 @@ const deepDesc = {
   "人性善":"你愿意先看见他人的善意与合作可能，这让关系有了温度。保持信任的同时辨认行动和边界，善良无需放弃自我保护。",
   "人性恶":"你对利益与风险保持警觉，不轻易把信任交出去。这份清醒能保护你，也别让防备替所有关系预设结局。"
 };
-const curatedResultMap = {
-  // 这些 Key 仅使用 dimensionDesc 中定义的计分维度。
-  "存在+自由": { title: "赛博游侠", quote: "看透荒诞之后，仍用自由选择热爱生活。" },
-  "存在+虚无": { title: "荒诞派诗人", quote: "在意义的留白处，亲手画出自己的世界。" },
-  "存在+当下": { title: "此刻体验家", quote: "不念过去，不畏将来，只对当下的生命体验负责。" },
-  "存在+自我实现": { title: "孤勇造物主", quote: "拒绝被定义，用行动在荒野中开辟自己的路。" },
-  "佛系+当下": { title: "松弛感大师", quote: "不争不抢，也能稳稳接住生活递来的惊喜。" },
-  "佛系+虚无": { title: "精神躺平家", quote: "看透生活的即兴，坐在台下看戏但不入戏。" },
-  "佛系+个人": { title: "都市隐士", quote: "远离无谓内耗，在自己的小宇宙里自在生活。" },
-  "虚无+个人": { title: "冷酷旁观者", quote: "对喧闹保持清醒，也把有限的心力留给自己。" },
-  "虚无+理性": { title: "清醒的悲观者", quote: "看见荒谬仍保持理智，是你对世界的回答。" },
-  "顺应+经验": { title: "现实主义智者", quote: "懂得顺势而行，也相信亲历带来的判断。" },
-  "自我实现+积极": { title: "热血攀登者", quote: "把挫折当作经验值，一步步走向想去的地方。" },
-  "自我实现+理性": { title: "冷静破局者", quote: "让逻辑厘清方向，让行动把潜能变成成果。" },
-  "自我实现+经验": { title: "硬核迭代者", quote: "不迷信权威，只相信实践让自己不断更新。" },
-  "自我实现+精神": { title: "灵魂雕刻师", quote: "用一生打磨内心，让成长成为自己的作品。" },
-  "积极+理性": { title: "秩序重建者", quote: "面对混乱，你相信思考与行动可以带来改变。" },
-  "积极+集体": { title: "并肩行动派", quote: "把个人力量汇入群体，让共同的愿望向前一步。" },
-  "积极+线性时间": { title: "未来乐观派", quote: "相信时间向前，也相信明天可以比今天更好。" },
-  "利他+人性善": { title: "人间小太阳", quote: "相信善意能抵达彼此，用温柔照亮身边的人。" },
-  "利他+集体": { title: "理想同行者", quote: "把关怀落在行动里，让更多人一起走得更远。" },
-  "利他+精神": { title: "灵魂摆渡人", quote: "用理解回应迷茫，为彼此点亮一盏心里的灯。" },
-  "个人+自由": { title: "旷野里的风", quote: "人生没有标准答案，你愿意为自己的选择负责。" },
-  "个人+理性": { title: "边界感卫士", quote: "保持清醒的距离，是你尊重自己与他人的方式。" },
-  "人性恶+经验": { title: "清醒的守望者", quote: "见过复杂仍保有柔软，也懂得为自己留好边界。" },
-  "享乐+物质": { title: "快乐体验官", quote: "努力让生活更宽裕，也不忘把快乐过在今天。" },
-  "享乐+经验": { title: "五感收藏家", quote: "亲自去感受世界，让每段经历都成为生活的注脚。" },
-  "物质+理性": { title: "从容规划师", quote: "看重现实回报，也用理性为未来留足余地。" },
-  "线性时间+理性": { title: "星辰赶路人", quote: "把目标拆成脚下的路，用耐心和判断走向未来。" },
-  "当下+经验": { title: "红尘修行者", quote: "不空谈遥远的以后，认真感受眼前真实的生活。" },
-  "精神+理性": { title: "清明思辨者", quote: "让理性照亮信念，也让信念为生活保留温度。" },
-  "个人+物质": { title: "独立生活家", quote: "靠自己的判断经营生活，把选择权握在手里。" }
-};
 const dimensionResultProfiles = {
-  "享乐": { title: "欢愉生活家", insight: "懂得认真感受快乐，也记得为明天留一份从容。" },
-  "自我实现": { title: "潜能开拓者", insight: "愿意把潜能变成行动，不让目标遮住生活本身。" },
-  "利他": { title: "温柔同行者", insight: "把关怀落到细节，也给自己的善意留好边界。" },
-  "佛系": { title: "松弛观察者", insight: "懂得顺势而行，也不放弃仍能改变的部分。" },
-  "积极": { title: "向前行动派", insight: "相信行动能够创造变化，也允许自己适时停靠。" },
-  "虚无": { title: "清醒旁观者", insight: "看穿宏大叙事之后，仍愿意回应具体的人和事。" },
-  "存在": { title: "意义创造者", insight: "不等待现成答案，用选择写下自己的解释。" },
-  "顺应": { title: "从容应变者", insight: "看懂环境的潮汐，也为自己留下转向的空间。" },
-  "线性时间": { title: "星辰赶路人", insight: "把目光投向未来，也认真走过脚下的每一步。" },
-  "当下": { title: "此刻收藏家", insight: "珍惜眼前真实的感受，也为未来保留余地。" },
-  "个人": { title: "边界守护者", insight: "珍视自主与空间，也让重要的人有靠近的可能。" },
-  "集体": { title: "共同行动者", insight: "在共同目标中找到力量，也不丢下自己的声音。" },
-  "物质": { title: "现实规划师", insight: "重视生活的现实根基，也给无形的满足留位置。" },
-  "精神": { title: "灵魂探索者", insight: "追求内在丰盈，并努力把理想带进日常。" },
-  "保守": { title: "秩序守望者", insight: "珍视可靠的经验，也愿意为新可能留一道门。" },
-  "自由": { title: "旷野追风者", insight: "珍惜选择的空间，也承担选择带来的责任。" },
-  "理性": { title: "逻辑思辨者", insight: "拆解问题、检验证据，让判断经得起推敲。" },
-  "经验": { title: "实证探索者", insight: "相信亲历与观察，也持续接纳新的证据。" },
-  "人性善": { title: "善意传递者", insight: "愿意给善意一份空间，也保持清醒的分寸。" },
-  "人性恶": { title: "清醒防护者", insight: "看见利益与风险，也不让防备封闭所有关系。" }
+  "享乐": { tag: "欢愉" },
+  "自我实现": { tag: "进阶" },
+  "利他": { tag: "共情" },
+  "佛系": { tag: "松弛" },
+  "积极": { tag: "向上" },
+  "虚无": { tag: "荒诞" },
+  "存在": { tag: "存在" },
+  "顺应": { tag: "随势" },
+  "线性时间": { tag: "流年" },
+  "当下": { tag: "此刻" },
+  "个人": { tag: "独立" },
+  "集体": { tag: "共生" },
+  "物质": { tag: "丰足" },
+  "精神": { tag: "灵性" },
+  "保守": { tag: "守序" },
+  "自由": { tag: "旷野" },
+  "理性": { tag: "思辨" },
+  "经验": { tag: "实证" },
+  "人性善": { tag: "向善" },
+  "人性恶": { tag: "戒备" }
 };
 function canonicalResultKey(first, second) {
   return dimensions.indexOf(first) < dimensions.indexOf(second)
     ? `${first}+${second}`
     : `${second}+${first}`;
 }
+const titleStyles = ['玩家', '研究员', '行者', '反差王'];
+const quoteTemplates = [
+  (first, second) => `让${first}与${second}相遇，你活出了自己的答案。`,
+  (first, second) => `你以${first}为底色，也用${second}照亮前路。`,
+  (first, second) => `把${first}留给内心，把${second}活成日常。`,
+  (first, second) => `在${first}与${second}之间，你选择亲自写下答案。`
+];
 const resultMap = Object.fromEntries(dimensions.flatMap((first, index) =>
-  dimensions.slice(index + 1).map(second => {
-    const firstProfile = dimensionResultProfiles[first];
-    const secondProfile = dimensionResultProfiles[second];
+  dimensions.slice(index + 1).map((second, pairIndex) => {
+    const firstTag = dimensionResultProfiles[first].tag;
+    const secondTag = dimensionResultProfiles[second].tag;
+    const styleIndex = pairIndex % titleStyles.length;
     return [canonicalResultKey(first, second), {
-      title: `${firstProfile.title}与${secondProfile.title}的双重奏`,
-      quote: `你以「${first}」为底色，也让「${second}」参与选择。${firstProfile.insight}${secondProfile.insight}`
+      title: `${firstTag}${secondTag}${titleStyles[styleIndex]}`,
+      quote: quoteTemplates[styleIndex](firstTag, secondTag)
     }];
   })
 ));
-for (const [key, result] of Object.entries(curatedResultMap)) {
-  const [first, second] = key.split('+');
-  resultMap[canonicalResultKey(first, second)] = result;
-}
 const invalidResultMapKeys = Object.keys(resultMap).filter(key =>
   key.split('+').some(dimension => !dimensions.includes(dimension))
 );
 if (invalidResultMapKeys.length) console.error('结果称号词库包含未知维度：', invalidResultMapKeys);
+const invalidResultMapEntries = Object.entries(resultMap).filter(([, result]) =>
+  Array.from(result.title).length > 8 || Array.from(result.quote).length < 15 || Array.from(result.quote).length > 25
+);
+if (invalidResultMapEntries.length) console.error('结果称号或金句长度超出规范：', invalidResultMapEntries.map(([key]) => key));
 function getPersonalSignature(ranking) {
   const highestScore = ranking[0][1];
   const leaders = ranking.filter(([, score]) => score === highestScore);
